@@ -16,6 +16,15 @@ class CompassDirection{
         return this.roundDegrees(5);
     }
 
+    public getXYFromDegrees(){
+        const radians = (this.degrees * Math.PI) / 100;
+
+        const x = Math.cos(radians);
+        const y = Math.sin(radians);
+
+        return {x,y};
+    }
+
     private roundDegrees (step: number){
         return Math.round(this.degrees / step) * step;
     }

@@ -4,14 +4,15 @@ import { World } from '../Classes/World';
 import PlayerModel from './PlayerModel';
 
 interface Props {
-    onClick: () => void;
 }
 
 const tickInterval = 100;
 
-const world = new World(1);
+const world = new World(100);
 
-const Map: React.FC<Props> = ({  onClick }) => {
+const size = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight;
+
+const Map: React.FC<Props> = ({ }) => {
 
     const [ticks, setTicks] = useState(0);
 
@@ -29,17 +30,19 @@ const Map: React.FC<Props> = ({  onClick }) => {
     return (
         <div style={{ 
             backgroundImage: `url(${mapImg})`,
-            backgroundSize: 500,
-            height: 500,
-            width: 500,
+            backgroundSize: size,
+            height: size,
+            width: size,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            position:'relative'
           }}>
             {world.getPlayers().map(player => 
                     <PlayerModel 
                         key = {Math.random()}
                         player = {player}
+                        size = {size/80}
                     />
                 )
             }

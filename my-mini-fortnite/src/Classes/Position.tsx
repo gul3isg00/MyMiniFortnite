@@ -22,6 +22,10 @@ class Position{
         return this.x;
     }
 
+    public getDirection(){
+        return this.direction;
+    }
+
     public getY(){
         return this.y;
     }
