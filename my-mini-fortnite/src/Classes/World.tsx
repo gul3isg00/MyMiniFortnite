@@ -1,6 +1,7 @@
 import { Item } from "./Item";
 import { Player } from "./Player"
 import { PointOfInterest } from "./PointOfInterest";
+import { Storm } from "./Storm";
 
 const size = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight;
 
@@ -8,17 +9,23 @@ class World{
     private players: Player[];
     private items: Item[];
     private pois: PointOfInterest[];
-    
+    private ticks: number;
+    private storm: Storm;
+
     constructor(numOfPlayers?: number){
+        this.ticks = 0;
         this.players = [];
         this.items = [];
         this.pois = [];
+        this.storm = new Storm();
         if(numOfPlayers){
             this.generatePlayers(numOfPlayers)
         }
     }
 
     public update(){
+        this.ticks++;
+
         // Update each player
         for(let x = 0; x!= this.players.length; x++){
             if(!this.players[x].isAlive()){continue;}

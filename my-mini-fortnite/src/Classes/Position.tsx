@@ -42,6 +42,14 @@ class Position{
         this.y += newY
     }
 
+    public setX(newX: number){
+        this.x = newX
+    }
+
+    public setY(newY: number){
+        this.y = newY
+    }
+
     public addZ(newZ: number){
         this.z += newZ
     }
