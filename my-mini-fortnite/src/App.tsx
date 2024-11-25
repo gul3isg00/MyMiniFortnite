@@ -8,6 +8,7 @@ function App() {
         backgroundColor:'#01586B',
         height:'100vh',
         width:'100vw',
+        overflow:'hidden',
         display:'flex', flexDirection:'row', justifyContent:'center'
       }}>
         <div style={{alignContent:'center'}}>

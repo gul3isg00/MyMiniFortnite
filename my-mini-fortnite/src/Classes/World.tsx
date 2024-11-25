@@ -17,7 +17,7 @@ class World{
         this.players = [];
         this.items = [];
         this.pois = [];
-        this.storm = new Storm();
+        this.storm = new Storm(Math.random()*size,Math.random()*size);
         if(numOfPlayers){
             this.generatePlayers(numOfPlayers)
         }
