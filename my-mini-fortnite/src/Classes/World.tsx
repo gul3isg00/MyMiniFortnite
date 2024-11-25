@@ -23,8 +23,12 @@ class World{
         }
     }
 
+    // Called every time the component ticks
     public update(){
         this.ticks++;
+
+        // Tick the storm
+        this.storm.incrementTick();
 
         // Update each player
         for(let x = 0; x!= this.players.length; x++){
@@ -35,6 +39,10 @@ class World{
                 this.players[x].attackPlayer(this.players[y]);
             }
         }
+    }
+
+    public getStorm(){
+        return this.storm;
     }
 
     public getPlayers(){

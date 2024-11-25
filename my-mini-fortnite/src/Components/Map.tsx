@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import mapImg from '../Assets/map.jpg';
 import { World } from '../Classes/World';
 import PlayerModel from './PlayerModel';
+import StormModel from './StormModel';
 
 interface Props {
 }
@@ -38,6 +39,7 @@ const Map: React.FC<Props> = ({ }) => {
             justifyContent: 'center',
             position:'relative'
           }}>
+            <StormModel storm={world.getStorm()}/>
             {world.getPlayers().map(player => 
                     <PlayerModel 
                         key = {Math.random()}
