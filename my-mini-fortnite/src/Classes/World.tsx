@@ -1,3 +1,4 @@
+import { randomInRange } from "../Services/general";
 import { Item } from "./Item";
 import { Player } from "./Player"
 import { PointOfInterest } from "./PointOfInterest";
@@ -17,11 +18,12 @@ class World{
         this.players = [];
         this.items = [];
         this.pois = [];
-        this.storm = new Storm(Math.random()*size,Math.random()*size);
+        this.storm = new Storm(randomInRange(size*0.3,size*0.7),randomInRange(size*0.3,size*0.7),size);
         if(numOfPlayers){
             this.generatePlayers(numOfPlayers)
         }
     }
+
 
     // Called every time the component ticks
     public update(){

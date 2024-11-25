@@ -55,13 +55,15 @@ class Player{
     }
 
     public collidesWith(otherPlayer: Player){
-        const distance = Math.sqrt(
-            Math.pow(otherPlayer.getPosition().getX() - this.getPosition().getX(), 2) + Math.pow(otherPlayer.getPosition().getY() - this.getPosition().getY(), 2)
-        );
+        var collidesX = (this.pos.getX()) - (otherPlayer.getPosition().getX());
+        var collidesY = (this.pos.getY()) - (otherPlayer.getPosition().getY());
+        var collidesAxis = (collidesX * collidesX) + (collidesY * collidesY);
+        var radii = (this.getViewDistance()) + (otherPlayer.getViewDistance());
+        return radii * radii >= collidesAxis;
 
-        return distance < (2 * (this.viewDistance));
     }
 
+    // Deffo attacks people out of range
     public attackPlayer(otherPlayer:Player){
         if(this.collidesWith(otherPlayer) && (Math.random() * 100 > this.accuracy) && otherPlayer.isAlive()){
             otherPlayer.setLastAggressor(this.getUsername());

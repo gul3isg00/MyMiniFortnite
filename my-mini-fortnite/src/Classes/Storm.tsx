@@ -1,6 +1,6 @@
+import { randomInRange } from "../Services/general";
 import { Position } from "./Position"
 
-const worldSize = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight;
 
 class Storm{
     private pos: Position;
@@ -8,18 +8,20 @@ class Storm{
     private radius: number;
     private oldRadius: number;
     private damageTick: number;
+    private worldSize:number;
     private ticks: number;
     private ticksUntilNextCircle: number;
     private numberOfCirclesCompleted: number;
 
-    constructor(x?:number,y?:number){
+    constructor(x?:number,y?:number, worldSize?:number){
         this.pos = new Position(x??0,y??0);
         this.oldPos = new Position(x??0,y??0);
-        this.radius = worldSize * 0.4;
-        this.oldRadius = worldSize * 0.8;
+        this.worldSize = worldSize??0
+        this.radius = this.worldSize * 0.4;
+        this.oldRadius = this.worldSize * 0.8;
         this.damageTick = 1;
         this.ticks = 0;
-        this.ticksUntilNextCircle = 50;
+        this.ticksUntilNextCircle = 500;
         this.numberOfCirclesCompleted = 0;
     }
 
@@ -64,8 +66,8 @@ class Storm{
         this.oldPos.setX(this.pos.getX());
         this.oldPos.setY(this.pos.getY());
 
-        this.pos.setX((Math.random() > 0.5 ? 1 : -1)*Math.random() * (this.pos.getX() + (this.radius/2)));
-        this.pos.setY((Math.random() > 0.5 ? 1 : -1)*Math.random() * (this.pos.getY() + (this.radius/2)));
+        this.pos.setX(this.pos.getX() + randomInRange(-(this.oldRadius*0.6),this.oldRadius*0.4));
+        this.pos.setY(this.pos.getY() + randomInRange(-(this.oldRadius*0.6),this.oldRadius*0.4));
         
         if(this.numberOfCirclesCompleted % 2 == 0 && this.damageTick > 5){this.damageTick *=2;}
 

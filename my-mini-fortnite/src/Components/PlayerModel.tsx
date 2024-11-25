@@ -24,34 +24,39 @@ const PlayerModel: React.FC<Props> = ({  player, size }) => {
 
 
     return player.isAlive() ? (
-        <div 
-            style={{ 
-            width: player.getViewDistance() + size,
-            height: player.getViewDistance() + size,
-            borderRadius: size*10,
+        <div>
+            {/* <div style={{
+            left: player.getPosition().getX() ,
+            top: player.getPosition().getY(),
             position:'absolute',
+            width:2,
+            height:2,
+            borderRadius:size*2,
+            backgroundColor:'green',
+            zIndex:7
+         }}/> */}
+          <div style={{
+            left: player.getPosition().getX() - (size/2) ,
+            top: player.getPosition().getY()  - (size/2),
+            position:'absolute',
+            width:size,
+            height:size,
+            borderRadius:size*2,
+            backgroundColor:'red',
+            zIndex:6
+         }}/>
+          <div style={{
+            left: player.getPosition().getX() - (size/2) - (player.getViewDistance()/2),
+            top: player.getPosition().getY()  - (size/2) - (player.getViewDistance()/2),
+            position:'absolute',
+            width:size + player.getViewDistance(),
+            height:size + player.getViewDistance(),
+            borderRadius:size*2,
             backgroundColor:'rgba(0,0,0,0.5)',
-            left:player? player.getPosition().getX() : 0,
-            top:player? player.getPosition().getY() : 0,
-            zIndex:5,
-          }}>
-            <div style={{display:'flex', flexDirection:'column', justifyContent:'center', height: size + player.getViewDistance()}}>
-            <div style={{display:'flex', justifyContent:'center'}}>
-
-                <div
-                    style={{ 
-                    width: size,
-                    height: size,
-                    borderRadius: size*10,
-                    position:'relative',
-                    color:'white',
-                    backgroundColor:'red',
-                    zIndex:6}}
-                />
-                <div style={{position:'absolute', color:'white'}}>{player.getUsername()}</div>
-            </div>
-            </div>
-          </div>
+            zIndex:5
+         }}/>
+        </div>
+       
     ) : <div/>;
 };
 
