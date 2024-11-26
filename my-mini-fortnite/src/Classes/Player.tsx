@@ -12,6 +12,7 @@ class Player{
     private username: string;
     private alive: boolean;
     private health: number;
+    private isHealing: boolean;
     private shield: number;
     private pos: Position;
     private movementDirection: CompassDirection;
@@ -28,6 +29,8 @@ class Player{
         this.speed = speed??1;
         this.shield = 0;
         this.alive = true;
+
+        this.isHealing = false;
 
         this.reactionSpeed = Math.random() *100;
         this.accuracy = Math.random() * 100;
@@ -67,7 +70,7 @@ class Player{
     public attackPlayer(otherPlayer:Player){
         if(this.collidesWith(otherPlayer) && (Math.random() * 100 > this.accuracy) && otherPlayer.isAlive()){
             otherPlayer.setLastAggressor(this.getUsername());
-            otherPlayer.takeDamage((this.getInventory().getItemInSlot(0) as Weapon).getDamage());
+            otherPlayer.takeDamage((this.getInventory().selectItemInSlot(0) as Weapon).getDamage());
         }
     }
 
