@@ -22,7 +22,6 @@ const PlayerModel: React.FC<Props> = ({  player, size }) => {
         </svg>)
     }
 
-
     return player.isAlive() ? (
         <div>
             {/* <div style={{
@@ -46,16 +45,16 @@ const PlayerModel: React.FC<Props> = ({  player, size }) => {
             color:'white',
             zIndex:6
          }}>{player.getUsername()}</div>
-          <div style={{
-            left: player.getPosition().getX() - (size/2) - (player.getViewDistance()/2),
-            top: player.getPosition().getY()  - (size/2) - (player.getViewDistance()/2),
+         {player.getEffectiveRange() > 0 ? <div style={{
+            left: player.getPosition().getX() - (size/2) - (player.getEffectiveRange()/2),
+            top: player.getPosition().getY()  - (size/2) - (player.getEffectiveRange()/2),
             position:'absolute',
-            width:size + player.getViewDistance(),
-            height:size + player.getViewDistance(),
-            borderRadius:size*2,
+            width:size + player.getEffectiveRange(),
+            height:size + player.getEffectiveRange(),
+            borderRadius: player.getEffectiveRange()*2,
             backgroundColor:'rgba(0,0,0,0.5)',
             zIndex:5
-         }}/>
+         }}/> : <div/>}
         </div>
        
     ) : <div/>;

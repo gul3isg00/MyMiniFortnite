@@ -1,10 +1,10 @@
 import { Ammo } from "../Enums/Ammo";
 import { Weapon } from "./Weapon";
 
-class Shotgun extends Weapon{
+class Sniper extends Weapon{
     constructor(){
-        super(Ammo.Shotgun,5,1000,20,100);
+        super(Ammo.Heavy,1,3000,100,150);
     }
 }
 
-export {Shotgun}
+export {Sniper}

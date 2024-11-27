@@ -6,6 +6,7 @@ import { Position } from "./Position";
 import { Shotgun } from "./Shotgun";
 import { Weapon } from "./Weapon";
 import { circularIntersect } from "../Services/general";
+import { Sniper } from "./Sniper";
 
 const worldSize = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight;
 
@@ -43,7 +44,9 @@ class Player{
         this.viewDistance = worldSize / 30;
         this.inv = new Inventory();
 
+        // Weapon distance doesn't scale as map scales
         this.inv.addItem(new Shotgun());
+        this.inv.addItem(new Sniper());
     }
 
     public getInventory(){
@@ -58,17 +61,70 @@ class Player{
         return this.alive;
     }
 
+    public getEffectiveRange(){
+        const selected = this.inv.getSelectedItem();
+        if(selected instanceof Weapon){
+            return selected.getRange();
+        }
+        return 0;
+    }
 
-    // Deffo attacks people out of range
-    public attackPlayer(otherPlayer:Player){
-        if(circularIntersect(this.pos.getX(),this.pos.getY(),this.viewDistance,otherPlayer.getPosition().getX(),otherPlayer.getPosition().getY(),otherPlayer.getViewDistance())
-            && (Math.random() * 100 > this.accuracy) && otherPlayer.isAlive()){
-            otherPlayer.setLastAggressor(this.getUsername());
-            const weap = (this.getInventory().selectItemInSlot(0) as Weapon);
-            if(weap){
-                otherPlayer.takeDamage(weap.getDamage());
-                return true;
+    // Doesn't always select optimal, maybe change to pick best based on chance of hitting 
+    // (e.g. whether gun can hit player, and if multiple can hit player, use distance aim multipliers)
+    public selectOptimalWeapon(opponent:Player){
+        if(!this.inv.hasAWeapon()){return;}
+        var curOptimal = [-1,999999]
+        this.inv.getItems().forEach((item,i) => {
+            if(item instanceof Weapon){
+                const xDist = Math.abs(this.pos.getX() - opponent.getPosition().getX());
+                const yDist = Math.abs(this.pos.getY() - opponent.getPosition().getY());
+                if(xDist <= item.getRange() && yDist <= item.getRange()){
+                    const comparisonVal = xDist < yDist ? xDist : yDist;
+                    
+                    const similarity =  Math.abs(curOptimal[1] - (this.inv.getItemInSlot(curOptimal[0]) as Weapon)?.getRange());
+                    console.log(`xDist ${xDist}, yDist ${yDist}, itemRange ${item.getRange()} easiestShotDist ${similarity}`);
+
+                    if(curOptimal[0] == -1 || (Math.abs(comparisonVal - item.getRange()) < similarity)){
+                        curOptimal = [i,comparisonVal];
+                    }
+                }
             }
+        });
+        if(curOptimal[0] != -1){
+            console.log(`optimal weapon to fire ${curOptimal[1]} in slot ${curOptimal[0]} and shoots ${(this.inv.getItemInSlot(curOptimal[0]) as Weapon).getRange()}`)
+            this.inv.selectItemInSlot(curOptimal[0]);
+        }
+    }
+
+    // !! Deffo attacks people out of range and doesn't take into account gun shooting speeds  !!
+    public attackPlayer(otherPlayer:Player){
+        if( 
+            // If the player has a weapon
+            this.inv.hasAWeapon() && 
+            // Can possible attack them
+            circularIntersect(
+                this.pos.getX(),
+                this.pos.getY(),
+                this.inv.getLongestRange(),
+                otherPlayer.getPosition().getX(),
+                otherPlayer.getPosition().getY(),
+                5
+            )&& 
+            // Hits their shot
+            (Math.random() * 100 > this.accuracy) && 
+            // And the other play can be attacked
+            otherPlayer.isAlive()
+        ){
+            otherPlayer.setLastAggressor(this.getUsername());
+            // select the optimal weapon
+            this.selectOptimalWeapon(otherPlayer);
+            
+            //NEEDS TO TAKE INTO ACCOUNT DIFFICULTY OF SNIPING FROM DISTANCE
+
+            // And shoot!
+            otherPlayer.takeDamage((this.inv.getSelectedItem() as Weapon)?.getDamage());
+            return true;
+            
         }
         return false;
     }

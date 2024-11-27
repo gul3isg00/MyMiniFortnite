@@ -29,6 +29,10 @@ class Weapon extends Item{
         }
     }
 
+    public getRange(){
+        return this.range;
+    }
+
     public getDamage(){
         return this.damage;
     }
