@@ -56,6 +56,18 @@ class Storm{
     public getOldPosition(){
         return this.oldPos;
     }
+    
+    public getActualX(){
+        return this.getOldPosition().getX() + ((this.getPosition().getX() - this.getOldPosition().getX())*this.getStormProgress());
+    }
+
+    public getActualY(){
+        return this.getOldPosition().getY() + ((this.getPosition().getY() - this.getOldPosition().getY())*this.getStormProgress());
+    }
+
+    public getActualRadius(){
+        return ((this.getOldRadius()*2) - (Math.abs((this.getRadius() - this.getOldRadius()))*2 * (this.getStormProgress())))/2;
+    }
 
     private nextStormCircle(){
         this.numberOfCirclesCompleted++;     

@@ -5,6 +5,7 @@ import { Item } from "./Item";
 import { Position } from "./Position";
 import { Shotgun } from "./Shotgun";
 import { Weapon } from "./Weapon";
+import { circularIntersect } from "../Services/general";
 
 const worldSize = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight;
 
@@ -57,21 +58,17 @@ class Player{
         return this.alive;
     }
 
-    public collidesWith(otherPlayer: Player){
-        var collidesX = (this.pos.getX()) - (otherPlayer.getPosition().getX());
-        var collidesY = (this.pos.getY()) - (otherPlayer.getPosition().getY());
-        var collidesAxis = (collidesX * collidesX) + (collidesY * collidesY);
-        var radii = (this.getViewDistance()) + (otherPlayer.getViewDistance());
-        return radii * radii >= collidesAxis;
-
-    }
 
     // Deffo attacks people out of range
     public attackPlayer(otherPlayer:Player){
-        if(this.collidesWith(otherPlayer) && (Math.random() * 100 > this.accuracy) && otherPlayer.isAlive()){
+        if(circularIntersect(this.pos.getX(),this.pos.getY(),this.viewDistance,otherPlayer.getPosition().getX(),otherPlayer.getPosition().getY(),otherPlayer.getViewDistance())
+            && (Math.random() * 100 > this.accuracy) && otherPlayer.isAlive()){
             otherPlayer.setLastAggressor(this.getUsername());
-            otherPlayer.takeDamage((this.getInventory().selectItemInSlot(0) as Weapon).getDamage());
-            return true;
+            const weap = (this.getInventory().selectItemInSlot(0) as Weapon);
+            if(weap){
+                otherPlayer.takeDamage(weap.getDamage());
+                return true;
+            }
         }
         return false;
     }
@@ -149,7 +146,7 @@ class Player{
         this.health = 0;
         this.healing = false;
         this.shield = 0;
-        console.log(`${this.getUsername()} was eliminated by ${this.lastAggressor}`);
+        // console.log(`${this.getUsername()} was eliminated by ${this.lastAggressor}`);
         return this.inv.dropAllItems();
     }
 
@@ -157,8 +154,8 @@ class Player{
         return this.username;
     }
 
-    public takeDamage(amount: number){
-        if(this.shield > 0){
+    public takeDamage(amount: number, healthOnly?:boolean){
+        if(this.shield > 0 && !healthOnly){
             this.shield -= amount;
             if(this.shield < 0){
                 this.health = Math.abs(this.shield);

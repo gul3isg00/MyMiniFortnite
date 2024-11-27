@@ -43,8 +43,9 @@ const PlayerModel: React.FC<Props> = ({  player, size }) => {
             height:size,
             borderRadius:size*2,
             backgroundColor:'red',
+            color:'white',
             zIndex:6
-         }}/>
+         }}>{player.getUsername()}</div>
           <div style={{
             left: player.getPosition().getX() - (size/2) - (player.getViewDistance()/2),
             top: player.getPosition().getY()  - (size/2) - (player.getViewDistance()/2),

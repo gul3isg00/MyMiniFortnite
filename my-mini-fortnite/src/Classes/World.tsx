@@ -1,4 +1,4 @@
-import { randomInRange } from "../Services/general";
+import { circularIntersect, randomInRange } from "../Services/general";
 import { Item } from "./Item";
 import { Player } from "./Player"
 import { PointOfInterest } from "./PointOfInterest";
@@ -37,6 +37,23 @@ class World{
 
         // Update each player
         for(let x = 0; x!= this.players.length; x++){
+
+            // Apply storm damage
+            if(!circularIntersect(
+                this.players[x].getPosition().getX(),
+                this.players[x].getPosition().getY(),
+                5,
+                this.storm.getActualX(),
+                this.storm.getActualY(),
+                this.storm.getActualRadius()
+            )){
+                this.players[x].takeDamage(this.storm.getdamageTick(),true);
+            }
+
+            if(!this.players[x].isAlive()){
+                continue;
+            }
+
             if(this.players[x].isHealing()){
                 // heal
                 continue;

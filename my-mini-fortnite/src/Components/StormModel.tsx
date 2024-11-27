@@ -10,8 +10,8 @@ const StormModel: React.FC<Props> = ({ storm }) => {
         <div style={{width:window.innerWidth, height:window.innerHeight}}>
           {/* Center marker */}
          {/* <div style={{
-            left: storm.getPosition().getX() - ((window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight)*0.005),
-            top: storm.getPosition().getY() - ((window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight)*0.005),
+            left: (storm.getOldPosition().getX() + ((storm.getPosition().getX() - storm.getOldPosition().getX())*storm.getStormProgress())) ,
+            top: (storm.getOldPosition().getY() + ((storm.getPosition().getY() - storm.getOldPosition().getY())*storm.getStormProgress())),
             position:'absolute',
             width:5,
             height:5,
@@ -34,16 +34,16 @@ const StormModel: React.FC<Props> = ({ storm }) => {
         }}/>
         <div 
             style={{ 
-            width: (storm.getOldRadius()*2) - (Math.abs((storm.getRadius() - storm.getOldRadius()))*2 * (storm.getStormProgress())),
-            height: (storm.getOldRadius()*2) - (Math.abs((storm.getRadius() - storm.getOldRadius()))*2 * (storm.getStormProgress())),
+            width: storm.getActualRadius() * 2,
+            height: storm.getActualRadius() * 2,
             borderRadius: (window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight) *10,
             position:'absolute',
             border:'solid',
             overflow: 'hidden',
             borderColor:'rgba(194,3,252,0.5)',
             borderWidth: (window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight),
-            left: (storm.getOldPosition().getX() + ((storm.getPosition().getX() - storm.getOldPosition().getX())*storm.getStormProgress())) - (window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight) - (((storm.getOldRadius()*2) - (Math.abs((storm.getRadius() - storm.getOldRadius()))*2 * (storm.getStormProgress())))/2) ,
-            top: (storm.getOldPosition().getY() + ((storm.getPosition().getY() - storm.getOldPosition().getY())*storm.getStormProgress())) - (window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight) - (((storm.getOldRadius()*2) - (Math.abs((storm.getRadius() - storm.getOldRadius()))*2 * (storm.getStormProgress())))/2),
+            left: storm.getActualX() - (window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight) - (((storm.getOldRadius()*2) - (Math.abs((storm.getRadius() - storm.getOldRadius()))*2 * (storm.getStormProgress())))/2) ,
+            top: storm.getActualY() - (window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight) - (((storm.getOldRadius()*2) - (Math.abs((storm.getRadius() - storm.getOldRadius()))*2 * (storm.getStormProgress())))/2),
             zIndex:3,
           }}/>
         </div>
