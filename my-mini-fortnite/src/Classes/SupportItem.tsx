@@ -41,6 +41,10 @@ class SupportItem extends Item{
         return 0;
     }
 
+    public getMaxCurrentHealingOutput(){
+        return (this.amountOfHeals * this.amountOfHeals) > this.maxHeals ? this.maxHeals : (this.amountOfHeals * this.amountOfHeals);
+    }
+
     public getType(){
         return this.type;
     }

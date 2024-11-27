@@ -26,8 +26,20 @@ class Inventory{
         }
     }
 
-    public selectHealingItemHealth(healthDisparity:number){
-        const healingItems = this.items.filter(item => item instanceof SupportItem && ((item as SupportItem).getType() == HealingType.Health));
+    public selectOptimalHealingItem(healthDisparity:number, type?:HealingType){
+        const healingItems = this.items.filter(item => item instanceof SupportItem && ((item as SupportItem).getType() == (type??HealingType.Health)));
+        if(healingItems.length > 0){
+            var bestForTheJob = healingItems[0] as SupportItem;
+            healingItems.forEach(item => {
+                const healItem = item as SupportItem;
+                if(Math.abs(healthDisparity - healItem.getMaxCurrentHealingOutput()) < (Math.abs(healthDisparity - bestForTheJob.getMaxCurrentHealingOutput()))){
+                    bestForTheJob = healItem;
+                }
+            })
+            if(bestForTheJob){
+                this.selectItemInSlot(this.items.indexOf(bestForTheJob));
+            }
+        }
     }
 
     // Later actually drop the item?
