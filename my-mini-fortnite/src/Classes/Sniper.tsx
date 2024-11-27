@@ -5,7 +5,7 @@ const worldSize = window.innerHeight > window.innerWidth ? window.innerWidth : w
 
 class Sniper extends Weapon{
     constructor(){
-        super(Ammo.Heavy,1,3000,worldSize*0.2,150);
+        super(Ammo.Heavy,1,0,worldSize*0.2,150,30);
     }
 }
 

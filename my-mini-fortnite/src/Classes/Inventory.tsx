@@ -46,6 +46,14 @@ class Inventory{
         }
     }
 
+    public selectPickaxe(){
+        this.selectedSlot = -1;
+    }
+
+    public isHoldingPickaxe(){
+        return this.selectedSlot === -1;
+    }
+
     public selectOptimalHealingItem(healthDisparity:number, type?:HealingType){
         if(!this.hasHeals){
             return;

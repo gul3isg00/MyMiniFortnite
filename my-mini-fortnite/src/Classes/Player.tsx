@@ -75,7 +75,7 @@ class Player{
         if(!this.inv.hasAWeapon()){return;}
         var curOptimal = [-1,999999]
         this.inv.getItems().forEach((item,i) => {
-            if(item instanceof Weapon){
+            if(item instanceof Weapon && item.isLoaded()){
                 const dist = distance(this.pos.getX(), this.pos.getY(), opponent.getPosition().getX(), opponent.getPosition().getY());
                 if(dist <= item.getRange()){
                     const similarity =  Math.abs(curOptimal[1] - (this.inv.getItemInSlot(curOptimal[0]) as Weapon)?.getRange());
@@ -92,7 +92,7 @@ class Player{
     }
 
     // !! Deffo attacks people out of range and doesn't take into account gun shooting speeds  !!
-    public attackPlayer(otherPlayer:Player){
+    public attackPlayer(otherPlayer:Player, tick:number){
         if( 
             // If the player has a weapon
             this.inv.hasAWeapon() && 
@@ -117,7 +117,7 @@ class Player{
             //NEEDS TO TAKE INTO ACCOUNT DIFFICULTY OF SNIPING FROM DISTANCE
 
             // And shoot!
-            otherPlayer.takeDamage((this.inv.getSelectedItem() as Weapon)?.getDamage());
+            otherPlayer.takeDamage((this.inv.getSelectedItem() as Weapon)?.shoot(tick));
             if(otherPlayer.getHealth() <= 0){
                 console.log(`${otherPlayer.getUsername()} was eliminated by ${this.username} with a ${this.inv.getSelectedItem()?.constructor.name} from ${Math.round(distance(this.pos.getX(), this.pos.getY(), otherPlayer.getPosition().getX(),otherPlayer.getPosition().getY()))}m`);
             }

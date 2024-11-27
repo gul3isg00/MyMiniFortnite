@@ -64,7 +64,8 @@ class World{
             for(let y = 0; y != this.players.length; y++){
                 if (x==y){continue;}
                 // If it ever returns true, then the player is attacking
-                isAttacking = this.players[x].attackPlayer(this.players[y]) || isAttacking;
+                isAttacking = this.players[x].attackPlayer(this.players[y],this.ticks) || isAttacking;
+                if(isAttacking){break;}
             }
 
             if(!isAttacking){
@@ -91,7 +92,7 @@ class World{
 
     private generatePlayers(numOfPlayers: number){
         for(var x = 0; x !== numOfPlayers; x++){
-            var curPlayer = new Player(Math.round(Math.random() * size), Math.round(Math.random() * size));
+            var curPlayer = new Player(randomInRange(size*0.1,size*0.9), randomInRange(size*0.1,size*0.9));
             curPlayer.assignRandomUsername();
             this.players.push(curPlayer);
         }

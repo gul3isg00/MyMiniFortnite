@@ -16,6 +16,7 @@ class CompassDirection{
         return this.roundDegrees(5);
     }
 
+
     public getXYFromDegrees(){
         const radians = (this.degrees * Math.PI) / 100;
 
