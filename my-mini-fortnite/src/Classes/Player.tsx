@@ -5,7 +5,7 @@ import { Item } from "./Item";
 import { Position } from "./Position";
 import { Shotgun } from "./Shotgun";
 import { Weapon } from "./Weapon";
-import { circularIntersect } from "../Services/general";
+import { circularIntersect, distance } from "../Services/general";
 import { Sniper } from "./Sniper";
 
 const worldSize = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight;
@@ -76,22 +76,17 @@ class Player{
         var curOptimal = [-1,999999]
         this.inv.getItems().forEach((item,i) => {
             if(item instanceof Weapon){
-                const xDist = Math.abs(this.pos.getX() - opponent.getPosition().getX());
-                const yDist = Math.abs(this.pos.getY() - opponent.getPosition().getY());
-                if(xDist <= item.getRange() && yDist <= item.getRange()){
-                    const comparisonVal = xDist < yDist ? xDist : yDist;
-                    
+                const dist = distance(this.pos.getX(), this.pos.getY(), opponent.getPosition().getX(), opponent.getPosition().getY());
+                if(dist <= item.getRange()){
                     const similarity =  Math.abs(curOptimal[1] - (this.inv.getItemInSlot(curOptimal[0]) as Weapon)?.getRange());
-                    console.log(`xDist ${xDist}, yDist ${yDist}, itemRange ${item.getRange()} easiestShotDist ${similarity}`);
 
-                    if(curOptimal[0] == -1 || (Math.abs(comparisonVal - item.getRange()) < similarity)){
-                        curOptimal = [i,comparisonVal];
+                    if(curOptimal[0] == -1 || (Math.abs(dist - item.getRange()) < similarity)){
+                        curOptimal = [i,dist];
                     }
                 }
             }
         });
         if(curOptimal[0] != -1){
-            console.log(`optimal weapon to fire ${curOptimal[1]} in slot ${curOptimal[0]} and shoots ${(this.inv.getItemInSlot(curOptimal[0]) as Weapon).getRange()}`)
             this.inv.selectItemInSlot(curOptimal[0]);
         }
     }
@@ -123,6 +118,9 @@ class Player{
 
             // And shoot!
             otherPlayer.takeDamage((this.inv.getSelectedItem() as Weapon)?.getDamage());
+            if(otherPlayer.getHealth() <= 0){
+                console.log(`${otherPlayer.getUsername()} was eliminated by ${this.username} with a ${this.inv.getSelectedItem()?.constructor.name} from ${Math.round(distance(this.pos.getX(), this.pos.getY(), otherPlayer.getPosition().getX(),otherPlayer.getPosition().getY()))}m`);
+            }
             return true;
             
         }
@@ -202,7 +200,6 @@ class Player{
         this.health = 0;
         this.healing = false;
         this.shield = 0;
-        // console.log(`${this.getUsername()} was eliminated by ${this.lastAggressor}`);
         return this.inv.dropAllItems();
     }
 

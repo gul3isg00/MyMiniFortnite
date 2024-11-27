@@ -7,7 +7,7 @@ import StormModel from './StormModel';
 interface Props {
 }
 
-const tickInterval = 100;
+const tickInterval = 1000;
 
 const world = new World(100);
 
