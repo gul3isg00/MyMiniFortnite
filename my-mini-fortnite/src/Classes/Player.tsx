@@ -12,7 +12,7 @@ class Player{
     private username: string;
     private alive: boolean;
     private health: number;
-    private isHealing: boolean;
+    private healing: boolean;
     private shield: number;
     private pos: Position;
     private movementDirection: CompassDirection;
@@ -30,7 +30,7 @@ class Player{
         this.shield = 0;
         this.alive = true;
 
-        this.isHealing = false;
+        this.healing = false;
 
         this.reactionSpeed = Math.random() *100;
         this.accuracy = Math.random() * 100;
@@ -71,7 +71,9 @@ class Player{
         if(this.collidesWith(otherPlayer) && (Math.random() * 100 > this.accuracy) && otherPlayer.isAlive()){
             otherPlayer.setLastAggressor(this.getUsername());
             otherPlayer.takeDamage((this.getInventory().selectItemInSlot(0) as Weapon).getDamage());
+            return true;
         }
+        return false;
     }
 
     public setLastAggressor(la:string){
@@ -145,6 +147,7 @@ class Player{
     private kill(){
         this.alive = false;
         this.health = 0;
+        this.healing = false;
         this.shield = 0;
         console.log(`${this.getUsername()} was eliminated by ${this.lastAggressor}`);
         return this.inv.dropAllItems();
@@ -182,6 +185,10 @@ class Player{
             return this.kill();
         }
         return [];
+    }
+
+    public isHealing(){
+        return this.healing;
     }
 
     public heal(amount:number){

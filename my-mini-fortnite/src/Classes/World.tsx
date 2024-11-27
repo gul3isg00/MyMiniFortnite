@@ -32,13 +32,26 @@ class World{
         // Tick the storm
         this.storm.incrementTick();
 
+        // Filter dead players
+        this.players = this.players.filter(player => player.isAlive());
+
         // Update each player
         for(let x = 0; x!= this.players.length; x++){
-            if(!this.players[x].isAlive()){continue;}
+            if(this.players[x].isHealing()){
+                // heal
+                continue;
+            }
             this.players[x].move();
+
+            var isAttacking = false;
             for(let y = 0; y != this.players.length; y++){
                 if (x==y){continue;}
-                this.players[x].attackPlayer(this.players[y]);
+                // If it ever returns true, then the player is attacking
+                isAttacking = this.players[x].attackPlayer(this.players[y]) || isAttacking;
+            }
+
+            if(!isAttacking){
+                //look for POI
             }
         }
     }
